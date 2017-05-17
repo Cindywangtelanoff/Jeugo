@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html> 
+ <head>
+    <title>Mission de espia</title> 
+</head>
+ <body>
+    <p align="center"> 
+    <!--This draws the Canvas on the webpage -->
+      <canvas id="mycanvas"></canvas> 
+    </p>
+ </body>
+ 
+ <!-- Run all the JavaScript stuff -->
+ <!-- Include the processing.js library -->
+ <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+ <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+ 
+ <script>
+    var sketchProc = function(processingInstance) {
+     with (processingInstance) {
+        size(1000, 700); 
+        frameRate(600);
+        
+        // ProgramCodeGoesHere
+        var scene = 0;
+
+        var show = 0;
+
+        var S = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+        var ai = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        var aiGuess = 0;
+        var aiG = 0;
+        var aiB = 0;
+        var aiTextY = 250;
+        var aiWait = 0;
+        var aiWaitTime = random(100, 300);
+
+        var num = 1;
+        var spot = function(x, y) {
+            strokeWeight(3);
+            stroke(0, 0, 0);
+            fill(255, 255, 255);
+            rect(x, y, 1000/8, 700/6);
+            fill(255, 0, 0);
+            text(num, x + 60, y + 25);
+        };
+        var x = 0;
+        var y = 0;
+
+        var cX = -1000/8;
+        var cY = 0;
+        var cNum = 0;
+        var place = 1;
+        var cCheck = 0;
+        var g = 0;
+        var b = 0;
+
+        var turn = 0;
+        var aiTurns = 1;
+        var turns = 1;
+        var aiRep = 0;
+
+        var traps = 0;
+        var qNum = round(random(1, 10));
+        var numAnswered = 0;
+        var asked = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        var pickNew = function() {
+            if(numAnswered < 8) {
+                qNum = round(random(1, 10));
+                if(asked[cNum] === 1) {
+                    pickNew();
+                }
+            } else {
+                background(255)
+                scene = 1;
+            }
+        };
+        var q = function(word, who, a1, a2, a3, a4, correct) {
+            noStroke();
+            fill(100, 100, 100);
+            rect(150, 500, 250, 50);
+            rect(150, 600, 250, 50);
+            rect(600, 500, 250, 50);
+            rect(600, 600, 250, 50);
+            fill(0);
+            textSize(75);
+            text(who +"("+ word +")", 350, 300)
+            textSize(50);
+            text(a1, 180, 540);
+            text(a2, 180, 640);
+            text(a3, 630, 540);
+            text(a4, 630, 640);
+                mouseReleased = function() {
+                    if(mouseX > 150 && mouseX < 400) {
+                        if(mouseY > 500 && mouseY < 550) {
+                            if(correct === 1) {
+                                traps++;
+                            }
+                            asked[cNum] = 1
+                            numAnswered++;
+                            pickNew();
+                        } else if(mouseY > 600 && mouseY < 650) {
+                            if(correct === 2) {
+                                traps++;
+                            }
+                            asked[cNum] = 1
+                            numAnswered++;
+                            pickNew();
+                        }
+                    } else if(mouseX > 600 && mouseX < 850) {
+                        if(mouseY > 500 && mouseY < 550) {
+                            if(correct === 3) {
+                                traps++;
+                            }
+                            asked[cNum] = 1
+                            pickNew();
+                            numAnswered++;
+                        } else if(mouseY > 600 && mouseY < 650) {
+                            if(correct === 4) {
+                                traps++;
+                            }
+                            asked[cNum] = 1
+                            numAnswered++;
+                            pickNew();
+                            
+                        }
+                    }
+            }
+        };
+        var draw = function() {
+            if(scene === "instruc") {
+                background(200)
+                textSize(100)
+                fill(255, 255, 0)
+                text("Insticciones", 200, 100)
+                textSize(25)
+                fill(0)
+                text("    Tu eres una espia. Primero, debes de agarar su financiamiento. Vas\n a tener un examen. Para cada pregunta que obtenes correcto, vas a \ntener una más trapa para usar(con el maximo de ocho). Luego, vas a\n poner sus secretos y sus trapas. Cuando terminas, vas a ir al 'lugar' del\n computadora(com.). Cuando estas haí, tu y com. van a turnarse. Si tu\n encontra una secreto de com., vas a obtener otra turno porque razones.\n Pero, si encontras uno de com.'s trapas, vas a perder un turno. \n                                         Buenas suertes!", 90, 150)
+                rect(800, 600, 100, 30)
+                fill(255)
+                textSize(30)
+                text("Atrás", 810, 625)
+                mouseReleased = function() {
+                    if(mouseX > 800 && mouseX < 900 && mouseY > 600 && mouseY < 630) {
+                        scene = 0;
+                    }
+                }
+            } else if(scene === 5) {
+                background(255)
+                if(qNum === 1) {
+                    asked[qNum] = 1;
+                    q("hablar", "él", "hablo", "hablamos", "habla", "hablan", 3);
+                    asked[qNum] = 1;
+                } else if(qNum === 2) {
+                    asked[qNum] = 1;
+                    q("caminar", "tú", "caminas", "caminé", "camino", "caminaste", 1);
+                    asked[qNum] = 1;
+                } else if(qNum === 3) {
+                    asked[qNum] = 1;
+                    q("trabajar", "ellas", "trabajam", "trabajan", "trbajo", "trabamos", 2);
+                    asked[qNum] = 1;
+                } else if(qNum === 4) {
+                    asked[qNum] = 1;
+                    q("viajar", "nosotros", "viajan", "viajé", "viojamos", "viajamos", 4);
+                    asked[qNum] = 1;
+                } else if(qNum === 5) {
+                    asked[qNum] = 1;
+                    q("llevar", "ellos", "llevan", "llaven", "||evan", "leven", 1);
+                    asked[qNum] = 1;
+                } else if(qNum === 6) {
+                    asked[qNum] = 1;
+                    q("cocinar", "ella", "cocinas", "cocina", "cocino", "cocinan", 2);
+                    asked[qNum] = 1;
+                } else if(qNum === 7) {
+                    asked[qNum] = 1;
+                    q("llorar", "yo", "llero", "llore", "llovo", "lloro", 4);
+                    asked[qNum] = 1;
+                } else if(qNum === 8) {
+                    q("esperar", "yo", "espera", "espere", "espero", "esqero", 3);
+                    asked[qNum] = 1;
+                } else if(qNum === 9) {
+                    asked[qNum] = 1;
+                    q("cantar", "ellas", "cantan", "cantamos", "canta", "canton", 1);
+                } else if(qNum === 10) {
+                    asked[qNum] = 1;
+                    q("tocar", "él", "toco", "toca", "taco", "tocan", 2);
+                }
+                fill(0)
+                textSize(25)
+                text("Correctos : " + traps, 825, 680)
+            } else if(scene === 0) {
+                background(0, 0, 0);
+                textSize(135);
+                fill(165, 0, 255);
+                text("Misión de espia", 25, 150);
+                fill(255, 0, 0);
+                rect(100, 400, 800, 100);
+                fill(255, 255, 0);
+                rect(100, 550, 800, 100);
+
+                textSize(75);
+                fill(0, 0, 0);
+                text("COMIENZO", 300, 475);
+                text("INSTRUCCIONES", 220, 635)
+
+                mouseReleased = function() {
+                    if(mouseX > 100 && mouseX < 900) {
+                        if(mouseY > 400 && mouseY < 500) {
+                            background(255);
+                            scene = 5;
+                        }
+                        if(mouseY > 550 && mouseY < 650) {
+                            scene = "instruc";
+                        }
+                    }
+                };
+            } else if(scene === 1) {
+                if(y >= 700) {
+                } else {
+                    if(num === 28 || num === 34 || num === 40) {
+                        x += 2000/8;
+                    }
+                        spot(x, y);
+                        x += 1000/8;
+                        num += 1;
+                    if(x === 1000) {
+                        x = 0;
+                        y += 700/6;
+                    }
+                }
+                mouseReleased = function() {
+                        cCheck = 1;
+                };
+                if(cCheck === 1) {
+                    if(cNum === 28 || cNum === 34 || cNum === 40) {
+                        cX += 2000/8;
+                    }
+                    if(mouseX > cX && mouseX < cX + 1000/8 && mouseY > cY && mouseY < cY + 700/6) {
+                        if(S[cNum] === 0) {
+                            if(place === 1) {
+                                fill(0, 255, 0);
+                                noStroke();
+                                rect(cX + 2, cY+2, 1000/8 - 4, 700/6-4)
+                                S[cNum] = place;
+                                
+                                cCheck = 0;
+                                cNum = 0;
+                                cX = -1000/8;
+                                cY = 0;
+                                g++;
+                            } else if(place === 2) {
+                                fill(255, 0, 0);
+                                noStroke();
+                                rect(cX+2, cY+2, 1000/8-4, 700/6-4)
+                                S[cNum] = place;
+                                
+                                cCheck = 0;
+                                cNum = 0;
+                                cX = -1000/8;
+                                cY = 0;
+                                b++;
+                            }
+                            
+                        } else if(S[cNum] !== place && S[cNum] !== 0) {
+                            fill(255, 255, 255);
+                            noStroke();
+                            rect(cX + 15, cY + 23, 30, 30);
+                            
+                            fill(255, 0, 0);
+                            if(place === 1) {
+                                if(g < 8) {
+                                    fill(0, 255, 0);
+                                    noStroke();
+                                    rect(cX+2, cY+2, 1000/8-4, 700/6-4)
+                                    g++;
+                                    b--;
+                                    
+                                    S[cNum] = place;
+                                    cCheck = 0;
+                                        
+                                    cNum = 0;
+                                    cX = -50;
+                                    cY = 0;
+                                    
+                                } 
+                            } else if(place === 2) {
+                                if(b < 8) {
+                                    fill(255, 0, 0);
+                                    noStroke();
+                                    rect(cX+2, cY+2, 1000/8-4, 700/6-4)
+                                    b++;
+                                    g--;
+                                    
+                                    S[cNum] = place;
+                                    cCheck = 0;
+                                    cNum = 0;
+                                    cX = -50;
+                                    cY = 0;
+                                }   
+                            }
+                        }   
+                    }
+                    cX += 1000/8;
+                    cNum += 1;
+                    if(cNum === 43) {
+                        cCheck = 0;
+                        cNum = 0;
+                        cX = -1000/8;
+                        cY = 0;
+                    } 
+                    
+                    if(cX > 999) {
+                        cX = -1000/8;
+                        cY += 700/6;
+                        cNum -= 1;
+                    }
+                        
+                }
+                if(g < 8) {
+                    place = 1;
+                    if(show === 0) {
+                        show = 1;
+                        println("Escoga donde quieres poner sus secretos.");
+                    }
+                    /*noStroke();
+                    fill(255, 255, 255);
+                    rect(155, 210, 90, 50);
+                    fill(255, 0, 0);
+                    text("Pick the good", 156, 224);*/
+                } else if(b < traps) {
+                    place = 2;
+                    if(show === 1) {
+                        show = 0;
+                        println("Ahora, pongas sus trapas: tienes " + traps + " trapas,");
+                    }
+                    /*noStroke();
+                    fill(255, 255, 255);
+                    rect(155, 210, 90, 50);
+                    fill(255, 0, 0);
+                    text("Pick the bad", 156, 224);*/
+                } else {
+                    scene = 2;
+                    g = 0;
+                    b = 0;
+                }   
+            } else if(scene === 2) {
+                x = 0;
+                y = 0;
+                num = 1;
+                background(255, 255, 255);
+                
+                aiGuess= round(random(1, 42));
+                if(ai[aiGuess] === 0) {
+                    if(aiG < 8) {
+                        ai[aiGuess] = 1;
+                        aiG++;
+                    } else if(aiB < 8) {
+                        ai[aiGuess] = 2;
+                        aiB++;
+                    } else {
+                        scene = 3;
+                        aiG = 0;
+                        aiB = 0;
+                        turn = 1;
+                    }
+                }
+                
+                cCheck = 0;
+                cNum = 0;
+                cX = -1000/8;
+                cY = 0;
+                
+                
+            } else if(scene === 3) {
+                println("Escoga donde crees que com.'s secretos estan")
+                noStroke();
+                fill(255, 255, 255);
+                rect(377, 353, 246, 500);
+
+                if(y === 1000) {
+                } else {
+                    if(num === 28 || num === 34 || num === 40) {
+                        x += 2000/8;
+                    }
+                        spot(x, y);
+                        x += 1000/8;
+                        num += 1;
+                    if(x === 1000) {
+                        x = 0;
+                        y += 700/6;
+                    }
+                }
+                mouseReleased = function() {
+                        cCheck = 1;
+                };
+                if(cCheck === 1) {
+                    if(cNum === 28 || cNum === 34 || cNum === 40) {
+                        cX += 2000/8;
+                    }
+                    
+                    if(turn === 1) {
+                        if(mouseX > cX && mouseX < cX + 1000/8 && mouseY > cY && mouseY < cY + 700/6) {
+                            if(ai[cNum] === 0) {
+                                fill(130, 130, 130);
+                                rect(cX, cY, 1000/8, 700/6);
+                                
+                                println(cNum + " : nada");
+                                
+                                aiRep = 0;
+                                
+                                ai[cNum] = 3;
+                                if(turns === 1) {
+                                    turn = 2;
+                                } else if(turns === 2) {
+                                    turn = 1;
+                                    turns = 1;
+                                }
+                            } else if(ai[cNum] === 1) {
+                                g++;
+                                fill(119, 255, 0);
+                                rect(cX, cY, 1000/8, 700/6);
+
+                                println(cNum + " : secreto");
+                                
+                                aiRep = 0;
+                                ai[cNum] = 3;
+                                turn = 1;
+                                    
+                                aiRep = 0;
+                            } else if(ai[cNum] === 2) {
+                                b++;
+                                fill(255, 0, 0);
+                                rect(cX, cY, 1000/8, 700/6);
+                                
+                                println(cNum + " : trapa");
+                                
+                                ai[cNum] = 3;
+                                turn = 2;
+                                aiTurns = 2;
+                                
+                                aiRep = 0;
+                            } else if(ai[cNum] === 3) {
+                                println("Escoga otra vez");
+                            }
+                        }
+                        cX += 1000/8;
+                        cNum += 1;
+                        if(cNum === 44) {
+                            cCheck = 0;
+                            cNum = 0;
+                            cX = -1000/8;
+                            cY = 0;
+                        } 
+                        
+                        if(cX >= 1000) {
+                            cX = -1000/8;
+                            cY += 700/6
+                            cNum -= 1;
+                        }
+                        if(g === 8) {
+                            scene = 6;
+                            turn = 3;
+                        }
+                    } else if(turn === 2) {
+                        if(aiWait >= aiWaitTime && aiTurns > 0) {
+                            aiGuess = round(random(1, 42));
+                            
+                            if(S[aiGuess] === 0) {
+                                println("Com. - " + aiGuess +  " : nada");
+                                S[aiGuess] = 3;
+                                
+                                aiRep -= 1;
+                                if(aiTurns === 1) {
+                                    turn = 1;
+                                } else if(aiTurns === 2) {
+                                    turn = 2;
+                                    aiTurns = 1;
+                                }
+                            } else if(S[aiGuess] === 1) {
+                                println("Com. - " + aiGuess +  " : secreto");
+                                
+                                S[aiGuess] = 3;
+                                aiG++;
+                                
+                                turn = 2;
+                            } else if(S[aiGuess] === 2) {
+                                println("Com. - " + aiGuess +  " : trapa");
+                                
+                                aiB++;
+                                turn = 1;
+                                turns = 2;
+                                
+                                aiRep = 0;
+                                S[aiGuess] = 3;
+                            } else if(S[aiGuess] === 3) {
+                                turn = 2;
+                            }
+                            aiWaitTime = round(random(100, 300))
+                        } else if(aiWait < aiWaitTime) {
+                            aiWait++;
+                        }
+                    }
+                    if(aiG === 8) {
+                        scene = 7;
+                    }
+                }
+                fill(0, 0, 255);
+                textSize(15);
+                text("Puntuación : " + g, 400, 400);
+                fill(255, 0, 0);
+                text("Com. Puntuación : " + aiG, 400, 425);
+            } else if(scene === 6) {
+                background(255, 20, 80)
+                textSize(100)
+                fill(255)
+                text("Tú ganaste!", 200, 200)
+                textSize(50)
+                fill(0)
+                text("Empuje su 'ratón' para juagar otra vez", 80, 600)
+                mouseClicked = function() {
+                    scene = 5;
+                }
+            } else if(scene === 7) {
+                background(100, 75, 50)
+                fill(185, 102, 184)
+                textSize(100)
+                text("Com. gano :(", 200, 200)
+                textSize(50)
+                fill(0)
+                text("Empuje su 'ratón' para juagar otra vez", 80, 600)
+                mouseClicked = function() {
+                    scene = 5;
+                }
+            }
+        };
+    }};
+
+    // Get the canvas that Processing-js will use
+    var canvas = document.getElementById("mycanvas"); 
+    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+    var processingInstance = new Processing(canvas, sketchProc); 
+ </script>
+</html>
