@@ -25,7 +25,7 @@
         var scene = 0;
 
         var show = 0;
-
+        var scene3MessageShown = false;
         var S = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
         var ai = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -373,7 +373,10 @@
                 
                 
             } else if(scene === 3) {
-                println("Escoga donde crees que com.'s secretos estan")
+                if(scene3MessageShown === false) {
+                   println("Escoga donde crees que com.'s secretos estan");
+                   scene3MessageShown = true;
+                }
                 noStroke();
                 fill(255, 255, 255);
                 rect(377, 353, 246, 500);
